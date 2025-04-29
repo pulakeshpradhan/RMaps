@@ -1,5 +1,5 @@
 --- 
-title: "R Maps Example Docs"
+title: "R Maps Example Docs Fully Updated"
 author: "John Doe"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
