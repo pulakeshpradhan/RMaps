@@ -1,11 +1,122 @@
-# Hello bookdown 
 
-All chapters start with a first-level heading followed by your chapter title, like the line above. There should be only one first-level heading (`#`) per .Rmd file.
+NDVI Calculation with Sentinel-2 in Google Earth Engine
+=======================================================
 
-## A section
+Introduction
+------------
 
-All chapter sections start with a second-level (`##`) or higher heading followed by your section title, like the sections above and below here. You can have as many as you want within a chapter.
+In this chapter, we will demonstrate how to calculate the Normalized Difference Vegetation Index (NDVI) using Sentinel-2 imagery in Google Earth Engine (GEE). NDVI is a widely used index for monitoring vegetation health, and Sentinel-2 provides high-resolution imagery that is ideal for such analysis.
 
-### An unnumbered section {-}
+Prerequisites
+-------------
 
-Chapters and sections are numbered by default. To un-number a heading, add a `{.unnumbered}` or the shorter `{-}` at the end of the heading, like in this section.
+Before you begin, ensure that you have access to Google Earth Engine and have set up your environment. For the analysis, we'll use Sentinel-2 imagery, which is available in Google Earth Engine's public data catalog.
+
+NDVI Calculation
+----------------
+
+To calculate NDVI, we need to use the red and near-infrared bands (B4 and B8 for Sentinel-2). The formula for NDVI is:
+
+$$
+\text{NDVI} = \frac{\text{B8} - \text{B4}}{\text{B8} + \text{B4}}
+$$
+
+### Code Example: NDVI Calculation
+
+```javascript
+// Define the region of interest (ROI)
+var roi = ee.Geometry.Polygon(
+        [[[4.5, 50.5],
+          [4.5, 51.0],
+          [5.0, 51.0],
+          [5.0, 50.5]]]);
+
+// Define the time period for Sentinel-2 data
+var startDate = '2023-01-01';
+var endDate = '2023-03-01';
+
+// Load Sentinel-2 imagery for the time period
+var sentinel2 = ee.ImageCollection('COPERNICUS/S2')
+  .filterBounds(roi)
+  .filterDate(startDate, endDate)
+  .filter(ee.Filter.lt('SCL', 8))  // Filter clouds
+  .select(['B4', 'B8']);  // Select red and NIR bands
+
+// Calculate NDVI
+var ndvi = sentinel2.map(function(image) {
+  return image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+});
+
+// Visualize the NDVI
+Map.centerObject(roi, 10);
+Map.addLayer(ndvi.mean(), {min: -1, max: 1, palette: ['blue', 'white', 'green']}, 'NDVI');
+
+// Display the result on the map
+print('NDVI image:', ndvi.mean());
+```
+
+NDVI Visualization
+------------------
+
+The NDVI values are displayed on the map using a color palette, where blue represents lower NDVI (bare or water) and green represents higher NDVI (healthy vegetation). You can adjust the min, max, and color palette for a better visualization depending on the region.
+
+Chart: NDVI Time Series
+-----------------------
+
+In addition to visualizing NDVI on the map, you can create a time series chart to analyze the temporal changes in vegetation health. The following code generates a time series chart of the mean NDVI for the region of interest over the specified time period.
+
+```javascript
+// Calculate mean NDVI over the region of interest
+var meanNDVI = ndvi.mean().reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: roi,
+  scale: 10
+});
+
+// Print the mean NDVI value for reference
+print('Mean NDVI:', meanNDVI);
+
+// Generate the time series chart
+var chart = ui.Chart.image.series({
+  imageCollection: ndvi,
+  region: roi,
+  reducer: ee.Reducer.mean(),
+  scale: 10,
+  xProperty: 'system:time_start'
+}).setOptions({
+  title: 'NDVI Time Series',
+  vAxis: {title: 'NDVI'},
+  hAxis: {title: 'Date'},
+  lineWidth: 1,
+  pointSize: 3
+});
+
+// Display the chart
+print(chart);
+```
+
+Exporting NDVI Data
+-------------------
+
+You can also export the NDVI data as a GeoTIFF file for further analysis in other GIS software. Here's how to export the mean NDVI image:
+
+```javascript
+// Define the export task for the mean NDVI image
+Export.image.toDrive({
+  image: ndvi.mean(),
+  description: 'NDVI_Export',
+  scale: 10,
+  region: roi,
+  fileFormat: 'GeoTIFF',
+  maxPixels: 1e8
+});
+```
+
+This will export the calculated mean NDVI as a GeoTIFF file to your Google Drive.
+
+Conclusion
+----------
+
+In this chapter, we've successfully calculated and visualized NDVI using Sentinel-2 imagery in Google Earth Engine. We also created a time series chart and demonstrated how to export the data for further use. NDVI is a powerful tool for monitoring vegetation health, and Google Earth Engine provides an efficient platform for such analyses.
+
+* * *

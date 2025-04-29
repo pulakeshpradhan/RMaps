@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 NDVI Calculation with Sentinel-2 in Google Earth Engine | R Maps Example Docs Fully Updated</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 NDVI Calculation with Sentinel-2 in Google Earth Engine | R Maps Example Docs Fully Updated" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 NDVI Calculation with Sentinel-2 in Google Earth Engine | R Maps Example Docs Fully Updated" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="John Doe" />
+
+
+<meta name="date" content="2025-04-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="cross.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><i class="fa fa-check"></i><b>2</b> NDVI Calculation with Sentinel-2 in Google Earth Engine</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#introduction"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#prerequisites"><i class="fa fa-check"></i><b>2.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.3" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#ndvi-calculation"><i class="fa fa-check"></i><b>2.3</b> NDVI Calculation</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#code-example-ndvi-calculation"><i class="fa fa-check"></i><b>2.3.1</b> Code Example: NDVI Calculation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#ndvi-visualization"><i class="fa fa-check"></i><b>2.4</b> NDVI Visualization</a></li>
+<li class="chapter" data-level="2.5" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#chart-ndvi-time-series"><i class="fa fa-check"></i><b>2.5</b> Chart: NDVI Time Series</a></li>
+<li class="chapter" data-level="2.6" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#exporting-ndvi-data"><i class="fa fa-check"></i><b>2.6</b> Exporting NDVI Data</a></li>
+<li class="chapter" data-level="2.7" data-path="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#conclusion"><i class="fa fa-check"></i><b>2.7</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cross.html"><a href="cross.html"><i class="fa fa-check"></i><b>3</b> Cross-references</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="cross.html"><a href="cross.html#chapters-and-sub-chapters"><i class="fa fa-check"></i><b>3.1</b> Chapters and sub-chapters</a></li>
+<li class="chapter" data-level="3.2" data-path="cross.html"><a href="cross.html#captioned-figures-and-tables"><i class="fa fa-check"></i><b>3.2</b> Captioned figures and tables</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="parts.html"><a href="parts.html"><i class="fa fa-check"></i><b>4</b> Parts</a></li>
+<li class="chapter" data-level="5" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>5</b> Footnotes and citations</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>5.1</b> Footnotes</a></li>
+<li class="chapter" data-level="5.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>5.2</b> Citations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>6</b> Blocks</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>6.1</b> Equations</a></li>
+<li class="chapter" data-level="6.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>6.2</b> Theorems and proofs</a></li>
+<li class="chapter" data-level="6.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>6.3</b> Callout blocks</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>7</b> Sharing your book</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>7.1</b> Publishing</a></li>
+<li class="chapter" data-level="7.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>7.2</b> 404 pages</a></li>
+<li class="chapter" data-level="7.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>7.3</b> Metadata for sharing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Maps Example Docs Fully Updated</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ndvi-calculation-with-sentinel-2-in-google-earth-engine" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> NDVI Calculation with Sentinel-2 in Google Earth Engine<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#ndvi-calculation-with-sentinel-2-in-google-earth-engine" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Introduction<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, we will demonstrate how to calculate the Normalized Difference Vegetation Index (NDVI) using Sentinel-2 imagery in Google Earth Engine (GEE). NDVI is a widely used index for monitoring vegetation health, and Sentinel-2 provides high-resolution imagery that is ideal for such analysis.</p>
+</div>
+<div id="prerequisites" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Prerequisites<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#prerequisites" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before you begin, ensure that you have access to Google Earth Engine and have set up your environment. For the analysis, we’ll use Sentinel-2 imagery, which is available in Google Earth Engine’s public data catalog.</p>
+</div>
+<div id="ndvi-calculation" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> NDVI Calculation<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#ndvi-calculation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To calculate NDVI, we need to use the red and near-infrared bands (B4 and B8 for Sentinel-2). The formula for NDVI is:</p>
+<p><span class="math display">\[
+\text{NDVI} = \frac{\text{B8} - \text{B4}}{\text{B8} + \text{B4}}
+\]</span></p>
+<div id="code-example-ndvi-calculation" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Code Example: NDVI Calculation<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#code-example-ndvi-calculation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-1" tabindex="-1"></a><span class="co">// Define the region of interest (ROI)</span></span>
+<span id="cb3-2"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-2" tabindex="-1"></a><span class="kw">var</span> roi <span class="op">=</span> ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Polygon</span>(</span>
+<span id="cb3-3"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-3" tabindex="-1"></a>        [[[<span class="fl">4.5</span><span class="op">,</span> <span class="fl">50.5</span>]<span class="op">,</span></span>
+<span id="cb3-4"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-4" tabindex="-1"></a>          [<span class="fl">4.5</span><span class="op">,</span> <span class="fl">51.0</span>]<span class="op">,</span></span>
+<span id="cb3-5"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-5" tabindex="-1"></a>          [<span class="fl">5.0</span><span class="op">,</span> <span class="fl">51.0</span>]<span class="op">,</span></span>
+<span id="cb3-6"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-6" tabindex="-1"></a>          [<span class="fl">5.0</span><span class="op">,</span> <span class="fl">50.5</span>]]])<span class="op">;</span></span>
+<span id="cb3-7"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-7" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-8" tabindex="-1"></a><span class="co">// Define the time period for Sentinel-2 data</span></span>
+<span id="cb3-9"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-9" tabindex="-1"></a><span class="kw">var</span> startDate <span class="op">=</span> <span class="st">&#39;2023-01-01&#39;</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-10" tabindex="-1"></a><span class="kw">var</span> endDate <span class="op">=</span> <span class="st">&#39;2023-03-01&#39;</span><span class="op">;</span></span>
+<span id="cb3-11"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-11" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-12" tabindex="-1"></a><span class="co">// Load Sentinel-2 imagery for the time period</span></span>
+<span id="cb3-13"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-13" tabindex="-1"></a><span class="kw">var</span> sentinel2 <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">&#39;COPERNICUS/S2&#39;</span>)</span>
+<span id="cb3-14"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-14" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterBounds</span>(roi)</span>
+<span id="cb3-15"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-15" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterDate</span>(startDate<span class="op">,</span> endDate)</span>
+<span id="cb3-16"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-16" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">lt</span>(<span class="st">&#39;SCL&#39;</span><span class="op">,</span> <span class="dv">8</span>))  <span class="co">// Filter clouds</span></span>
+<span id="cb3-17"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-17" tabindex="-1"></a>  <span class="op">.</span><span class="fu">select</span>([<span class="st">&#39;B4&#39;</span><span class="op">,</span> <span class="st">&#39;B8&#39;</span>])<span class="op">;</span>  <span class="co">// Select red and NIR bands</span></span>
+<span id="cb3-18"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-18" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-19" tabindex="-1"></a><span class="co">// Calculate NDVI</span></span>
+<span id="cb3-20"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-20" tabindex="-1"></a><span class="kw">var</span> ndvi <span class="op">=</span> sentinel2<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(image) {</span>
+<span id="cb3-21"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-21" tabindex="-1"></a>  <span class="cf">return</span> image<span class="op">.</span><span class="fu">normalizedDifference</span>([<span class="st">&#39;B8&#39;</span><span class="op">,</span> <span class="st">&#39;B4&#39;</span>])<span class="op">.</span><span class="fu">rename</span>(<span class="st">&#39;NDVI&#39;</span>)<span class="op">;</span></span>
+<span id="cb3-22"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-22" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb3-23"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-23" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-24" tabindex="-1"></a><span class="co">// Visualize the NDVI</span></span>
+<span id="cb3-25"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-25" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(roi<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb3-26"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-26" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(ndvi<span class="op">.</span><span class="fu">mean</span>()<span class="op">,</span> {<span class="dt">min</span><span class="op">:</span> <span class="op">-</span><span class="dv">1</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">palette</span><span class="op">:</span> [<span class="st">&#39;blue&#39;</span><span class="op">,</span> <span class="st">&#39;white&#39;</span><span class="op">,</span> <span class="st">&#39;green&#39;</span>]}<span class="op">,</span> <span class="st">&#39;NDVI&#39;</span>)<span class="op">;</span></span>
+<span id="cb3-27"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-27" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-28" tabindex="-1"></a><span class="co">// Display the result on the map</span></span>
+<span id="cb3-29"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb3-29" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;NDVI image:&#39;</span><span class="op">,</span> ndvi<span class="op">.</span><span class="fu">mean</span>())<span class="op">;</span></span></code></pre></div>
+</div>
+</div>
+<div id="ndvi-visualization" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> NDVI Visualization<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#ndvi-visualization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The NDVI values are displayed on the map using a color palette, where blue represents lower NDVI (bare or water) and green represents higher NDVI (healthy vegetation). You can adjust the min, max, and color palette for a better visualization depending on the region.</p>
+</div>
+<div id="chart-ndvi-time-series" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Chart: NDVI Time Series<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#chart-ndvi-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In addition to visualizing NDVI on the map, you can create a time series chart to analyze the temporal changes in vegetation health. The following code generates a time series chart of the mean NDVI for the region of interest over the specified time period.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-1" tabindex="-1"></a><span class="co">// Calculate mean NDVI over the region of interest</span></span>
+<span id="cb4-2"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-2" tabindex="-1"></a><span class="kw">var</span> meanNDVI <span class="op">=</span> ndvi<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb4-3"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-3" tabindex="-1"></a>  <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()<span class="op">,</span></span>
+<span id="cb4-4"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-4" tabindex="-1"></a>  <span class="dt">geometry</span><span class="op">:</span> roi<span class="op">,</span></span>
+<span id="cb4-5"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-5" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb4-6"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-6" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-7"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-8" tabindex="-1"></a><span class="co">// Print the mean NDVI value for reference</span></span>
+<span id="cb4-9"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-9" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;Mean NDVI:&#39;</span><span class="op">,</span> meanNDVI)<span class="op">;</span></span>
+<span id="cb4-10"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-11" tabindex="-1"></a><span class="co">// Generate the time series chart</span></span>
+<span id="cb4-12"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-12" tabindex="-1"></a><span class="kw">var</span> chart <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">series</span>({</span>
+<span id="cb4-13"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-13" tabindex="-1"></a>  <span class="dt">imageCollection</span><span class="op">:</span> ndvi<span class="op">,</span></span>
+<span id="cb4-14"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-14" tabindex="-1"></a>  <span class="dt">region</span><span class="op">:</span> roi<span class="op">,</span></span>
+<span id="cb4-15"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-15" tabindex="-1"></a>  <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()<span class="op">,</span></span>
+<span id="cb4-16"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-16" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb4-17"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-17" tabindex="-1"></a>  <span class="dt">xProperty</span><span class="op">:</span> <span class="st">&#39;system:time_start&#39;</span></span>
+<span id="cb4-18"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-18" tabindex="-1"></a>})<span class="op">.</span><span class="fu">setOptions</span>({</span>
+<span id="cb4-19"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-19" tabindex="-1"></a>  <span class="dt">title</span><span class="op">:</span> <span class="st">&#39;NDVI Time Series&#39;</span><span class="op">,</span></span>
+<span id="cb4-20"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-20" tabindex="-1"></a>  <span class="dt">vAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">&#39;NDVI&#39;</span>}<span class="op">,</span></span>
+<span id="cb4-21"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-21" tabindex="-1"></a>  <span class="dt">hAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">&#39;Date&#39;</span>}<span class="op">,</span></span>
+<span id="cb4-22"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-22" tabindex="-1"></a>  <span class="dt">lineWidth</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb4-23"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-23" tabindex="-1"></a>  <span class="dt">pointSize</span><span class="op">:</span> <span class="dv">3</span></span>
+<span id="cb4-24"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-24" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-25"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-25" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-26" tabindex="-1"></a><span class="co">// Display the chart</span></span>
+<span id="cb4-27"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb4-27" tabindex="-1"></a><span class="fu">print</span>(chart)<span class="op">;</span></span></code></pre></div>
+</div>
+<div id="exporting-ndvi-data" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Exporting NDVI Data<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#exporting-ndvi-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You can also export the NDVI data as a GeoTIFF file for further analysis in other GIS software. Here’s how to export the mean NDVI image:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-1" tabindex="-1"></a><span class="co">// Define the export task for the mean NDVI image</span></span>
+<span id="cb5-2"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-2" tabindex="-1"></a>Export<span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">toDrive</span>({</span>
+<span id="cb5-3"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-3" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span> ndvi<span class="op">.</span><span class="fu">mean</span>()<span class="op">,</span></span>
+<span id="cb5-4"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-4" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">&#39;NDVI_Export&#39;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-5" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-6" tabindex="-1"></a>  <span class="dt">region</span><span class="op">:</span> roi<span class="op">,</span></span>
+<span id="cb5-7"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-7" tabindex="-1"></a>  <span class="dt">fileFormat</span><span class="op">:</span> <span class="st">&#39;GeoTIFF&#39;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-8" tabindex="-1"></a>  <span class="dt">maxPixels</span><span class="op">:</span> <span class="fl">1e8</span></span>
+<span id="cb5-9"><a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#cb5-9" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p>This will export the calculated mean NDVI as a GeoTIFF file to your Google Drive.</p>
+</div>
+<div id="conclusion" class="section level2 hasAnchor" number="2.7">
+<h2><span class="header-section-number">2.7</span> Conclusion<a href="ndvi-calculation-with-sentinel-2-in-google-earth-engine.html#conclusion" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, we’ve successfully calculated and visualized NDVI using Sentinel-2 imagery in Google Earth Engine. We also created a time series chart and demonstrated how to export the data for further use. NDVI is a powerful tool for monitoring vegetation health, and Google Earth Engine provides an efficient platform for such analyses.</p>
+<hr />
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cross.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-intro.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["_main.pdf", "_main.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
